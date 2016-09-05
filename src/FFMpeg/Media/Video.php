@@ -133,8 +133,6 @@ class Video extends Audio
                     $listeners = $format->createProgressListener($this, $this->ffprobe, $pass + 1, $totalPasses);
                 }
 
-                // FFMPEG prints everything on stdErr so redirect it to stdOut
-                $passCommands[] = '2>&1';
                 $output = $this->driver->command($passCommands, false, $listeners);
                 if ($this->logger) {
                     $this->logger->info($output);
