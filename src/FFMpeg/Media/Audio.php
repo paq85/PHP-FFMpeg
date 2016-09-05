@@ -20,9 +20,12 @@ use FFMpeg\Exception\InvalidArgumentException;
 use FFMpeg\Filters\Audio\AudioFilterInterface;
 use FFMpeg\Filters\FilterInterface;
 use FFMpeg\Format\ProgressableInterface;
+use Psr\Log\LoggerAwareTrait;
 
 class Audio extends AbstractStreamableMedia
 {
+    use LoggerAwareTrait;
+    
     /**
      * {@inheritdoc}
      *
@@ -94,7 +97,10 @@ class Audio extends AbstractStreamableMedia
         $commands[] = $outputPathfile;
 
         try {
-            $this->driver->command($commands, false, $listeners);
+            $output = $this->driver->command($commands, false, $listeners);
+            if ($this->logger) {
+                $this->logger->info($output);
+            }
         } catch (ExecutionFailureException $e) {
             $this->cleanupTemporaryFile($outputPathfile);
             throw new RuntimeException('Encoding failed', $e->getCode(), $e);

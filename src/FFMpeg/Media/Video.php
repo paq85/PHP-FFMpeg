@@ -23,9 +23,12 @@ use FFMpeg\Format\ProgressableInterface;
 use FFMpeg\Format\AudioInterface;
 use FFMpeg\Format\VideoInterface;
 use Neutron\TemporaryFilesystem\Manager as FsManager;
+use Psr\Log\LoggerAwareTrait;
 
 class Video extends Audio
 {
+    use LoggerAwareTrait;
+
     /**
      * {@inheritdoc}
      *
@@ -130,7 +133,12 @@ class Video extends Audio
                     $listeners = $format->createProgressListener($this, $this->ffprobe, $pass + 1, $totalPasses);
                 }
 
-                $this->driver->command($passCommands, false, $listeners);
+                // FFMPEG prints everything on stdErr so redirect it to stdOut
+                $passCommands[] = '2>&1';
+                $output = $this->driver->command($passCommands, false, $listeners);
+                if ($this->logger) {
+                    $this->logger->info($output);
+                }
             } catch (ExecutionFailureException $e) {
                 $failure = $e;
                 break;
