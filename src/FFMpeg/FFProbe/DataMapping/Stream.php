@@ -51,57 +51,13 @@ class Stream extends AbstractData
             throw new LogicException('Dimensions can only be retrieved from video streams.');
         }
 
-        $sampleRatio = $displayRatio = null;
-
         $width = $this->get('width');
         $height = $this->get('height');
-
-        if (null !== $ratio = $this->extractRatio($this, 'sample_aspect_ratio')) {
-            $sampleRatio = $ratio;
-        }
-        if (null !== $ratio = $this->extractRatio($this, 'display_aspect_ratio')) {
-            $displayRatio = $ratio;
-        }
 
         if (null === $height || null === $width) {
             throw new RuntimeException('Unable to extract dimensions.');
         }
 
-        if (null !== $displayRatio && null !== $sampleRatio) {
-            if ($sampleRatio[0] !== 1 && $sampleRatio[1] !== 1) {
-                if (null !== $width && null !== $height) {
-                    // stretch video according to pixel sample aspect ratio
-                    $width = round($width * ($sampleRatio[0] / $sampleRatio[1]));
-                    // set height according to display aspect ratio
-                    $height = round($width * ($displayRatio[1] / $displayRatio[0]));
-                }
-            }
-        }
-
         return new Dimension($width, $height);
-    }
-
-    /**
-     * Extracts a ratio from a string in a \d+:\d+ format given a key name.
-     *
-     * @param  Stream     $stream The stream where to look for the ratio.
-     * @param  string     $name   the name of the key.
-     * @return null|array An array containing the width and the height, null if not found.
-     */
-    private function extractRatio(Stream $stream, $name)
-    {
-        if (!$stream->has($name)) {
-            return;
-        }
-
-        $ratio = $stream->get($name);
-        if (preg_match('/\d+:\d+/', $ratio)) {
-            $data = array_filter(explode(':', $ratio), function ($int) {
-                return $int > 0;
-            });
-            if (2 === count($data)) {
-                return array_map(function ($int) { return (int) $int; }, $data);
-            }
-        }
     }
 }
