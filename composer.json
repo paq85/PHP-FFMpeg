@@ -19,6 +19,16 @@
             "name": "Patrik Karisch",
             "email": "patrik@karisch.guru",
             "homepage": "http://www.karisch.guru"
+        },
+        {
+            "name": "Romain Biard",
+            "email": "romain.biard@gmail.com",
+            "homepage": "https://www.strime.io/"
+        },
+        {
+            "name": "Jens Hausdorf",
+            "email": "hello@jens-hausdorf.de",
+            "homepage": "https://jens-hausdorf.de"
         }
     ],
     "require": {
@@ -34,7 +44,7 @@
     "require-dev": {
         "sami/sami": "~1.0",
         "silex/silex": "~1.0",
-        "phpunit/phpunit": "^4.8"
+        "phpunit/phpunit": "^4.8.36"
     },
     "autoload": {
         "psr-0": {
@@ -48,7 +58,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.6-dev"
+            "dev-master": "0.7-dev"
         }
     }
 }
